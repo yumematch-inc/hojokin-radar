@@ -5,32 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>補助金・助成金レーダー</title>
 <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --bg: #f0f4f8;
-  --surface: #ffffff;
-  --surface2: #f8fafc;
-  --border: #dde3ec;
-  --border2: #c8d2e0;
-  --text: #0f172a;
-  --sub: #334155;
-  --muted: #64748b;
-  --accent: #1d4ed8;
-  --accent-light: #eff6ff;
-  --red: #dc2626;
-  --red-light: #fef2f2;
-  --orange: #c2410c;
-  --orange-light: #fff7ed;
-  --green: #15803d;
-  --green-light: #f0fdf4;
-  --yellow: #92400e;
-  --yellow-light: #fffbeb;
-  --purple: #6d28d9;
-  --purple-light: #f5f3ff;
-  --cyan: #0e7490;
-  --pink: #be185d;
+  --bg:       #eef2f7;
+  --card:     #ffffff;
+  --border:   #dde4ee;
+  --text:     #0d1b2e;
+  --sub:      #2d4059;
+  --muted:    #6b7a99;
+  --blue:     #1a56db;
+  --blue-bg:  #ebf3ff;
+  --red:      #c81e1e;
+  --red-bg:   #fef2f2;
+  --orange:   #c05621;
+  --orange-bg:#fff5eb;
+  --green:    #0d7a4b;
+  --green-bg: #edfaf4;
+  --shadow-sm: 0 1px 3px rgba(13,27,46,.07), 0 1px 2px rgba(13,27,46,.04);
+  --shadow-md: 0 4px 16px rgba(13,27,46,.1),  0 2px 4px rgba(13,27,46,.06);
+  --shadow-lg: 0 12px 32px rgba(13,27,46,.13), 0 4px 8px rgba(13,27,46,.07);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
@@ -38,224 +35,266 @@ body {
   color: var(--text);
   min-height: 100vh;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ─── HEADER ─── */
-.header {
-  background: #fff;
-  border-bottom: 1px solid var(--border);
-  padding: 0 24px;
-  height: 56px;
-  display: flex;
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  background: linear-gradient(135deg, #0a2447 0%, #0f3576 45%, #1a56db 100%);
+  padding: 36px 5% 32px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.hero-inner { position: relative; z-index: 1; }
+
+.hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.hero-badge {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  gap: 6px;
+  margin-bottom: 10px;
 }
-.header-left { display: flex; align-items: center; gap: 10px; }
-.header-icon {
-  width: 32px; height: 32px;
-  background: linear-gradient(135deg, #1d4ed8, #7c3aed);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-}
-.header h1 { font-size: 1rem; font-weight: 700; letter-spacing: -.02em; }
-.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
-.header-date { font-size: .72rem; color: var(--muted); }
-.header-note { font-size: .68rem; color: var(--orange); font-weight: 500; }
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 0 rgba(74,222,128,.4); animation: ping 2s infinite; }
+@keyframes ping { 0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.4)} 50%{box-shadow:0 0 0 6px rgba(74,222,128,0)} }
 
-/* ─── UPDATE BANNER ─── */
-.update-banner {
-  background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
-  border-bottom: 1px solid var(--border);
-  padding: 8px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  font-size: .75rem;
-}
-.update-info { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
-.update-item { display: flex; align-items: center; gap: 5px; color: var(--muted); }
-.update-item strong { color: var(--sub); }
-.update-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); display: inline-block; }
-.update-dot.pulse {
-  animation: pulse 2s infinite;
-  box-shadow: 0 0 0 0 rgba(21,128,61,.4);
-}
-@keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(21,128,61,.4); }
-  70%  { box-shadow: 0 0 0 6px rgba(21,128,61,0); }
-  100% { box-shadow: 0 0 0 0 rgba(21,128,61,0); }
-}
+.hero h1 { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.2; margin-bottom: 8px; }
+.hero-sub { font-size: .85rem; color: rgba(255,255,255,.7); margin-bottom: 24px; max-width: 560px; }
+.hero-meta { font-size: .72rem; color: rgba(255,255,255,.5); }
 
-/* ─── CONTAINER ─── */
-.container { max-width: 1280px; margin: 0 auto; padding: 20px 24px; }
-
-/* ─── STATS ─── */
-.stats-bar {
+.hero-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  margin-bottom: 18px;
+  margin-top: 24px;
 }
-.stat-card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+.hero-stat {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px;
   padding: 14px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  backdrop-filter: blur(8px);
 }
-.stat-label { font-size: .72rem; color: var(--muted); }
-.stat-value { font-size: 1.6rem; font-weight: 800; letter-spacing: -.03em; }
-.stat-sub { font-size: .7rem; color: var(--muted); }
+.hero-stat-label { font-size: .7rem; color: rgba(255,255,255,.6); margin-bottom: 4px; }
+.hero-stat-val { font-size: 1.5rem; font-weight: 800; letter-spacing: -.03em; }
+.hero-stat-sub { font-size: .68rem; color: rgba(255,255,255,.5); margin-top: 2px; }
 
-/* ─── FILTERS ─── */
+/* ══════════════════════════════════════
+   FILTER BAR (sticky)
+══════════════════════════════════════ */
 .filter-wrap {
   background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 16px;
-  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+  padding: 0 5%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(13,27,46,.06);
 }
-.filter-section + .filter-section { margin-top: 8px; }
-.filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.filter-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.filter-inner::-webkit-scrollbar { display: none; }
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 0;
+  flex-shrink: 0;
+}
+.filter-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 12px;
+  flex-shrink: 0;
+}
 .filter-group-label {
-  font-size: .7rem;
-  font-weight: 600;
+  font-size: .68rem;
+  font-weight: 700;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: .05em;
-  min-width: 56px;
+  letter-spacing: .07em;
+  margin-right: 6px;
+  white-space: nowrap;
 }
-.filter-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
+.fbtn {
+  background: transparent;
+  border: 1.5px solid var(--border);
   color: var(--muted);
-  padding: 4px 12px;
-  border-radius: 16px;
+  padding: 5px 12px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: .78rem;
-  transition: all .15s;
   font-family: inherit;
+  white-space: nowrap;
+  transition: all .15s;
+  font-weight: 500;
 }
-.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
-.filter-btn.active {
-  background: var(--accent-light);
-  border-color: var(--accent);
-  color: var(--accent);
-  font-weight: 600;
-}
+.fbtn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+.fbtn.on { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
 
-/* ─── CARDS ─── */
+/* ══════════════════════════════════════
+   GRID
+══════════════════════════════════════ */
+.grid-wrap { padding: 24px 5%; }
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 18px;
 }
 
+/* ══════════════════════════════════════
+   CARD
+══════════════════════════════════════ */
 .card {
-  background: #fff;
+  background: var(--card);
+  border-radius: 16px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: box-shadow .15s, transform .15s;
+  transition: box-shadow .2s, transform .2s;
+  display: flex;
+  flex-direction: column;
 }
-.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); transform: translateY(-1px); }
+.card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
 
-.card-stripe { height: 4px; }
-.stripe-urgent  { background: var(--red); }
-.stripe-warning { background: var(--orange); }
-.stripe-normal  { background: var(--green); }
-.stripe-ongoing { background: var(--accent); }
-.stripe-closed  { background: #cbd5e1; }
+/* left accent bar */
+.card-accent { width: 4px; flex-shrink: 0; }
+.card-row { display: flex; flex: 1; }
 
-.card-body { padding: 16px 18px; }
+.acc-urgent  { background: var(--red); }
+.acc-warning { background: var(--orange); }
+.acc-normal  { background: var(--green); }
+.acc-ongoing { background: var(--blue); }
+.acc-closed  { background: #cbd5e1; }
 
-/* Tags row */
-.card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.card-body { padding: 18px 20px 0; flex: 1; display: flex; flex-direction: column; }
+
+/* tags + badge */
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
 .tag {
-  font-size: .67rem;
+  font-size: .65rem;
   font-weight: 700;
   padding: 2px 7px;
   border-radius: 4px;
-  letter-spacing: .01em;
+  letter-spacing: .02em;
+  white-space: nowrap;
 }
-.t-hanahiraku { background: #f5f3ff; color: var(--purple); border: 1px solid #ddd6fe; }
-.t-pharma     { background: #ecfeff; color: var(--cyan);   border: 1px solid #a5f3fc; }
-.t-fp         { background: #f0fdf4; color: var(--green);  border: 1px solid #bbf7d0; }
-.t-all        { background: #eff6ff; color: var(--accent); border: 1px solid #bfdbfe; }
-.t-it         { background: #fff7ed; color: var(--orange); border: 1px solid #fed7aa; }
-.t-employment { background: #fdf4ff; color: var(--pink);   border: 1px solid #f5d0fe; }
-.t-sales      { background: #fffbeb; color: var(--yellow); border: 1px solid #fde68a; }
-.t-facility   { background: #f0fdfa; color: #0f766e;       border: 1px solid #99f6e4; }
-.t-nagano     { background: #fff1f2; color: #be123c;       border: 1px solid #fecdd3; }
+.t-hana   { background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; }
+.t-pharma { background: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc; }
+.t-fp     { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.t-all    { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+.t-it     { background: #fff7ed; color: #9a3412; border: 1px solid #fed7aa; }
+.t-emp    { background: #fdf4ff; color: #86198f; border: 1px solid #f0abfc; }
+.t-sale   { background: #fefce8; color: #854d0e; border: 1px solid #fde047; }
+.t-fac    { background: #f0fdfa; color: #115e59; border: 1px solid #99f6e4; }
+.t-nag    { background: #fff1f2; color: #9f1239; border: 1px solid #fecdd3; }
+.t-zai    { background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; }
 
-/* Card header */
-.card-header2 { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
-.card-title { font-size: .95rem; font-weight: 700; line-height: 1.35; }
-.card-subtitle { font-size: .72rem; color: var(--muted); margin-top: 2px; }
-
-.urgency-badge {
+/* urgency badge */
+.ubadge {
   flex-shrink: 0;
   font-size: .68rem;
   font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 5px;
+  padding: 3px 9px;
+  border-radius: 6px;
   white-space: nowrap;
 }
-.ub-urgent  { background: var(--red-light);    color: var(--red);    border: 1px solid #fca5a5; }
-.ub-warning { background: var(--orange-light); color: var(--orange); border: 1px solid #fdba74; }
-.ub-normal  { background: var(--green-light);  color: var(--green);  border: 1px solid #86efac; }
-.ub-ongoing { background: var(--accent-light); color: var(--accent); border: 1px solid #93c5fd; }
+.ub-urgent  { background: var(--red-bg);    color: var(--red);    border: 1px solid #fca5a5; }
+.ub-warning { background: var(--orange-bg); color: var(--orange); border: 1px solid #fdba74; }
+.ub-normal  { background: var(--green-bg);  color: var(--green);  border: 1px solid #6ee7b7; }
+.ub-ongoing { background: var(--blue-bg);   color: var(--blue);   border: 1px solid #93c5fd; }
 .ub-closed  { background: #f1f5f9; color: var(--muted); border: 1px solid #cbd5e1; }
 
-/* Amount */
-.card-amount-row { display: flex; align-items: baseline; gap: 8px; margin: 8px 0 4px; }
-.card-amount { font-size: 1.3rem; font-weight: 800; color: #1d4ed8; letter-spacing: -.02em; }
-.card-rate   { font-size: .75rem; color: var(--muted); }
+/* title */
+.card-title { font-size: .98rem; font-weight: 800; line-height: 1.3; letter-spacing: -.02em; }
+.card-sub   { font-size: .72rem; color: var(--muted); margin-top: 2px; }
 
-/* Meta row (difficulty, effort) */
-.card-meta-row { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
-.meta-item { display: flex; align-items: center; gap: 4px; font-size: .73rem; color: var(--muted); }
-.stars { color: #f59e0b; letter-spacing: -.05em; }
+/* amount */
+.amount-row { margin: 12px 0 2px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.amount     { font-size: 1.35rem; font-weight: 900; color: var(--blue); letter-spacing: -.03em; }
+.rate-note  { font-size: .75rem; color: var(--muted); }
 
+/* meta row: difficulty + effort */
+.meta-row { display: flex; align-items: center; gap: 14px; margin: 8px 0 10px; }
+.meta-item { display: flex; align-items: center; gap: 4px; font-size: .72rem; color: var(--muted); }
+.stars { letter-spacing: -.1em; }
+.star-filled  { color: #f59e0b; }
+.star-empty   { color: #d1d5db; }
+
+/* desc */
 .card-desc { font-size: .82rem; color: var(--sub); line-height: 1.65; margin-bottom: 10px; }
 
-/* Point box */
+/* point box */
 .point-box {
   background: #fffbeb;
   border-left: 3px solid #f59e0b;
-  border-radius: 0 6px 6px 0;
-  padding: 7px 10px;
+  border-radius: 0 8px 8px 0;
+  padding: 8px 12px;
   font-size: .77rem;
   color: #78350f;
-  line-height: 1.5;
-  margin-bottom: 10px;
+  line-height: 1.55;
+  margin-bottom: 12px;
 }
+.point-box strong { color: #92400e; }
 
-/* Deadline row */
-.deadline-row { display: flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--muted); margin-bottom: 12px; }
-.deadline-val { font-weight: 600; color: var(--sub); }
-.deadline-days { font-weight: 700; }
-.days-urgent  { color: var(--red); }
-.days-warning { color: var(--orange); }
-.days-normal  { color: var(--green); }
-.days-ongoing { color: var(--accent); }
+/* deadline row */
+.deadline-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: .78rem;
+  flex-wrap: wrap;
+}
+.dl-label { color: var(--muted); }
+.dl-val   { font-weight: 700; color: var(--sub); }
+.dl-days  {
+  margin-left: auto;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+.days-urgent  { background: var(--red-bg);    color: var(--red); }
+.days-warning { background: var(--orange-bg); color: var(--orange); }
+.days-normal  { background: var(--green-bg);  color: var(--green); }
+.days-ongoing { background: var(--blue-bg);   color: var(--blue); }
+.days-closed  { background: #f1f5f9; color: var(--muted); }
 
-/* Expand toggle */
+/* expand button */
 .expand-btn {
   width: 100%;
-  background: var(--surface2);
+  background: #f8fafc;
   border: 1px solid var(--border);
-  border-radius: 7px;
-  padding: 8px 12px;
+  border-radius: 8px;
+  padding: 9px 14px;
   text-align: left;
   cursor: pointer;
   font-size: .78rem;
@@ -264,44 +303,50 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: background .1s;
+  transition: background .12s;
   font-family: inherit;
   margin-bottom: 0;
 }
-.expand-btn:hover { background: var(--border); }
-.expand-arrow { transition: transform .2s; font-size: .7rem; }
+.expand-btn:hover { background: #eef2f7; }
+.expand-btn.open  { background: #eef2f7; border-color: var(--blue); color: var(--blue); border-radius: 8px 8px 0 0; }
+.expand-arrow { font-size: .65rem; transition: transform .2s; }
 .expand-btn.open .expand-arrow { transform: rotate(180deg); }
 
-/* Expanded detail */
+/* expanded detail */
 .card-detail {
   display: none;
-  margin-top: 10px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid var(--blue);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
   overflow: hidden;
+  margin-bottom: 0;
 }
 .card-detail.open { display: block; }
 
-.detail-section { padding: 12px 14px; }
-.detail-section + .detail-section { border-top: 1px solid var(--border); }
-.detail-title {
-  font-size: .72rem;
+.detail-sec { padding: 12px 14px; background: #fff; }
+.detail-sec + .detail-sec { border-top: 1px solid var(--border); }
+.detail-head {
+  font-size: .68rem;
   font-weight: 700;
-  color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: .06em;
+  letter-spacing: .08em;
+  color: var(--muted);
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.doc-list, .step-list { list-style: none; }
+.doc-list { list-style: none; }
 .doc-list li {
   font-size: .78rem;
   color: var(--sub);
   padding: 3px 0;
   display: flex;
   align-items: baseline;
-  gap: 7px;
+  gap: 8px;
 }
-.doc-list li::before { content: '□'; color: var(--accent); flex-shrink: 0; font-size: .8rem; }
+.doc-list li::before { content: '□'; color: var(--blue); font-size: .8rem; flex-shrink: 0; }
+.step-list { list-style: none; counter-reset: step; }
 .step-list li {
   font-size: .78rem;
   color: var(--sub);
@@ -309,650 +354,487 @@ body {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  counter-increment: step;
 }
-.step-num {
-  background: var(--accent);
-  color: #fff;
+.snum {
+  width: 18px; height: 18px;
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
+  background: var(--blue);
+  color: #fff;
+  font-size: .62rem;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: .65rem;
-  font-weight: 700;
+  flex-shrink: 0;
 }
 .detail-note {
   font-size: .75rem;
   color: #7c2d12;
   background: #fff7ed;
-  border-radius: 5px;
-  padding: 7px 10px;
-  margin-top: 8px;
-  line-height: 1.5;
+  border-radius: 6px;
+  padding: 8px 10px;
+  line-height: 1.55;
 }
-.detail-note::before { content: '⚠ '; }
+.detail-note::before { content: '⚠ '; font-weight: 700; }
 
-/* Card footer */
-.card-footer2 {
+/* card footer */
+.card-foot {
+  padding: 12px 20px 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 18px 14px;
   border-top: 1px solid var(--border);
-  margin-top: 10px;
+  margin-top: 14px;
 }
 .card-link {
-  color: var(--accent);
-  font-size: .78rem;
+  color: var(--blue);
   text-decoration: none;
+  font-size: .78rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 3px;
-  font-weight: 600;
 }
 .card-link:hover { text-decoration: underline; }
+.card-id { font-size: .68rem; color: #c9d4e8; }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .stats-bar { grid-template-columns: repeat(2, 1fr); }
-  .cards-grid { grid-template-columns: 1fr; }
-  .container { padding: 14px 16px; }
-  .update-banner { flex-direction: column; align-items: flex-start; }
+/* ══════════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════════ */
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 64px 20px;
+  color: var(--muted);
+}
+.empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.empty p { font-size: .9rem; }
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+.foot {
+  text-align: center;
+  padding: 24px 5% 32px;
+  font-size: .72rem;
+  color: #b0bdd4;
+}
+.foot a { color: var(--blue); text-decoration: none; }
+.foot a:hover { text-decoration: underline; }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media (max-width: 900px) {
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .hero { padding: 24px 4% 20px; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .hero-stat { padding: 10px 12px; }
+  .hero-stat-val { font-size: 1.25rem; }
+  .filter-wrap { padding: 0 4%; }
+  .grid-wrap { padding: 16px 4%; }
+  .cards-grid { grid-template-columns: 1fr; gap: 14px; }
+  .card-body { padding: 14px 16px 0; }
+  .card-foot { padding: 10px 16px 12px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ─── HEADER ─── -->
-<div class="header">
-  <div class="header-left">
-    <div class="header-icon">📡</div>
-    <h1>補助金・助成金レーダー</h1>
-  </div>
-  <div class="header-right">
-    <div class="header-date" id="last-updated">最終更新: 2026年5月19日</div>
-    <div class="header-note">⚠ 申請前に公式サイトで最新情報を確認してください</div>
-  </div>
-</div>
-
-<!-- ─── UPDATE BANNER ─── -->
-<div class="update-banner">
-  <div class="update-info">
-    <div class="update-item">
-      <span class="update-dot pulse"></span>
-      <span><strong>自動更新：</strong>毎週月曜 7:00 に最新情報をリサーチ</span>
-    </div>
-    <div class="update-item">
-      <span>🔔</span>
-      <span><strong>通知：</strong>新しい補助金・締切変更があればLINE「小池の秘書」に通知</span>
-    </div>
-    <div class="update-item">
-      <span>📋</span>
-      <span><strong>更新トリガー：</strong>新規公募開始 / 締切更新 / 条件変更 / 長野県・財団の新着</span>
-    </div>
-  </div>
-</div>
-
-<!-- ─── MAIN ─── -->
-<div class="container">
-
-  <!-- Stats -->
-  <div class="stats-bar">
-    <div class="stat-card">
-      <div class="stat-label">表示中</div>
-      <div class="stat-value" id="stat-total" style="color:var(--accent)">—</div>
-      <div class="stat-sub">件の補助金・助成金</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">最大受給額（全件合計試算）</div>
-      <div class="stat-value" style="color:#d97706">約1,800</div>
-      <div class="stat-sub">万円以上（重複受給可能なものあり）</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">締切間近（60日以内）</div>
-      <div class="stat-value" id="stat-urgent" style="color:var(--orange)">—</div>
-      <div class="stat-sub">件（要注意）</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">通年・随時申請可能</div>
-      <div class="stat-value" style="color:var(--green)">5</div>
-      <div class="stat-sub">件（いつでも申請OK）</div>
-    </div>
-  </div>
-
-  <!-- Filters -->
-  <div class="filter-wrap">
-    <div class="filter-section">
-      <div class="filter-row">
-        <span class="filter-group-label">事業別</span>
-        <button class="filter-btn active" data-filter="all">すべて</button>
-        <button class="filter-btn" data-filter="biz-hanahiraku">🌸 はなひらく</button>
-        <button class="filter-btn" data-filter="biz-pharma">💊 PharmaEight</button>
-        <button class="filter-btn" data-filter="biz-fp">💼 FP相談</button>
+<!-- ══════════════════════════════════════
+     HERO
+══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-top">
+      <div>
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          毎週月曜 7:00 自動更新
+        </div>
+        <h1>📡 補助金・助成金レーダー</h1>
+        <p class="hero-sub">はなひらく・PharmaEight・FP相談で使える補助金・助成金を一覧で追跡。<br>新着・締切変更は LINE「小池の秘書」に自動通知。</p>
+        <div class="hero-meta" id="last-updated">最終更新: 2026年5月19日 ／ ⚠ 申請前に必ず公式サイトで最新情報を確認してください</div>
       </div>
     </div>
-    <div class="filter-section">
-      <div class="filter-row">
-        <span class="filter-group-label">種別</span>
-        <button class="filter-btn" data-filter="cat-it">💻 IT/DX</button>
-        <button class="filter-btn" data-filter="cat-employment">👥 雇用・人材</button>
-        <button class="filter-btn" data-filter="cat-sales">📈 販路開拓</button>
-        <button class="filter-btn" data-filter="cat-facility">🏗️ 設備投資</button>
-        <button class="filter-btn" data-filter="cat-nagano">📍 長野県・地域</button>
-        <button class="filter-btn" data-filter="cat-zaidan">🏛️ 財団</button>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-label">表示中</div>
+        <div class="hero-stat-val" id="stat-total">—</div>
+        <div class="hero-stat-sub">件の補助金・助成金</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-label">最大受給額（全件合計）</div>
+        <div class="hero-stat-val">約1,800<span style="font-size:.9rem;font-weight:500">万円+</span></div>
+        <div class="hero-stat-sub">重複受給可能なものあり</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-label">締切間近（60日以内）</div>
+        <div class="hero-stat-val" id="stat-urgent" style="color:#fbbf24">—</div>
+        <div class="hero-stat-sub">件（要注意）</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-label">通年・随時申請可</div>
+        <div class="hero-stat-val" style="color:#4ade80">5</div>
+        <div class="hero-stat-sub">件（いつでも申請OK）</div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Cards -->
-  <div class="cards-grid" id="cards-grid"></div>
+<!-- ══════════════════════════════════════
+     FILTER BAR
+══════════════════════════════════════ -->
+<div class="filter-wrap">
+  <div class="filter-inner">
+    <div class="filter-group">
+      <span class="filter-group-label">事業</span>
+      <button class="fbtn on" data-f="all">すべて</button>
+      <button class="fbtn" data-f="biz-hanahiraku">🌸 はなひらく</button>
+      <button class="fbtn" data-f="biz-pharma">💊 PharmaEight</button>
+      <button class="fbtn" data-f="biz-fp">💼 FP相談</button>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group">
+      <span class="filter-group-label">種別</span>
+      <button class="fbtn" data-f="cat-it">💻 IT/DX</button>
+      <button class="fbtn" data-f="cat-employment">👥 雇用</button>
+      <button class="fbtn" data-f="cat-sales">📈 販路開拓</button>
+      <button class="fbtn" data-f="cat-facility">🏗 設備</button>
+      <button class="fbtn" data-f="cat-nagano">📍 長野県</button>
+      <button class="fbtn" data-f="cat-zaidan">🏛 財団</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CARDS
+══════════════════════════════════════ -->
+<div class="grid-wrap">
+  <div class="cards-grid" id="grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<div class="foot">
+  <a href="https://github.com/yumematch-inc/hojokin-radar" target="_blank" rel="noopener">GitHub</a>
+  　／　申請前に各公式サイトで最新情報をご確認ください
 </div>
 
 <script>
 const TODAY = new Date('2026-05-19');
 
+/* ─── DATA ─── */
 const GRANTS = [
   {
-    id: 1,
-    title: 'デジタル化・AI導入補助金2026',
-    subtitle: '旧 IT導入補助金 ／ 通常枠・インボイス枠・セキュリティ枠',
-    amount: '最大 450万円',
-    rate: '補助率 1/2〜2/3',
-    difficulty: 3,
-    effort: '5〜10時間',
-    desc: 'ソフトウェア・AIツール・業務システムの導入費を補助。年6〜7回締切。インボイス対応・セキュリティ強化も対象。最も汎用性が高い補助金。',
-    deadline: '2026-08-25',
-    deadlineLabel: '第4次 8月25日',
-    businesses: ['all'],
-    categories: ['it'],
-    url: 'https://it-shien.smrj.go.jp/',
-    point: '業務システム・AIツール・クラウドサービス導入に直接使える。IT支援事業者が伴走してくれる',
-    docs: [
-      'GビズIDプライム（事前取得 ※2〜3週間かかる）',
-      'SECURITY ACTION 二つ星宣言（当日取得可）',
-      'IT導入支援事業者との連携確認',
-      '直近の確定申告書 or 法人決算書',
-      '登記事項証明書（法人）',
-    ],
-    steps: [
-      'GビズID取得を最優先で着手（最低2〜3週間前に）',
-      'SECURITY ACTIONの宣言（無料・オンラインで当日完了）',
-      'IT導入補助金公式サイトで支援事業者を検索・選定',
-      '導入したいITツールを選定・支援事業者に相談',
-      '申請マイページで交付申請（支援事業者と共同作業）',
-      '交付決定後にツール導入・利用開始',
-      '実績報告（導入効果の入力）→ 補助金振込',
-    ],
-    note: '申請代行は制度上禁止。IT支援事業者との共同申請が必須。賃上げ要件あり（再申請時に注意）。',
+    id:1, title:'デジタル化・AI導入補助金2026',
+    subtitle:'旧 IT導入補助金 ／ 通常枠・インボイス枠・セキュリティ枠',
+    amount:'最大 450万円', rate:'補助率 1/2〜2/3',
+    difficulty:3, effort:'5〜10時間',
+    desc:'ソフトウェア・AIツール・業務システムの導入費を補助。年6〜7回締切。インボイス対応・セキュリティ強化も対象。最も汎用性が高い補助金。',
+    deadline:'2026-08-25', deadlineLabel:'第4次 8月25日',
+    businesses:['all'], categories:['it'],
+    url:'https://it-shien.smrj.go.jp/',
+    point:'業務システム・AIツール・クラウドサービス導入に直接使える。IT支援事業者が伴走してくれる',
+    docs:['GビズIDプライム（事前取得 ※2〜3週間かかる）','SECURITY ACTION 二つ星宣言（当日取得可）','IT導入支援事業者との連携確認','直近の確定申告書 or 法人決算書','登記事項証明書（法人）'],
+    steps:['GビズID取得を最優先で着手（最低2〜3週間前に）','SECURITY ACTIONの宣言（無料・オンラインで当日完了）','IT導入補助金公式サイトで支援事業者を検索・選定','導入したいITツールを選定・支援事業者に相談','申請マイページで交付申請（支援事業者と共同作業）','交付決定後にツール導入・利用開始','実績報告（導入効果の入力）→ 補助金振込'],
+    note:'申請代行は制度上禁止。IT支援事業者との共同申請が必須。賃上げ要件あり（再申請時に注意）。',
   },
   {
-    id: 2,
-    title: '小規模事業者持続化補助金',
-    subtitle: '第20回 公募準備中（第19回 4/30 締切済）',
-    amount: '最大 200万円',
-    rate: '補助率 2/3（インボイス特例で最大250万円）',
-    difficulty: 3,
-    effort: '10〜15時間',
-    desc: '販路開拓・広告・LP制作・チラシ・SNS・Webサイトリニューアルなど幅広く対象。FP相談・PharmaEightのマーケ投資を丸ごとカバーできる。',
-    deadline: null,
-    deadlineLabel: '次回公募 時期待ち',
-    businesses: ['pharma', 'fp', 'all'],
-    categories: ['sales'],
-    url: 'https://www.jizokukahojokin.info/',
-    point: 'セミナー告知LP・イベントフライヤー・SNS広告費・名刺・パンフレットも対象になる可能性あり',
-    docs: [
-      '経営計画書（自作フォーム）',
-      '補助事業計画書（自作フォーム）',
-      '事業支援計画書（商工会・商工会議所が発行）',
-      '直近の確定申告書（法人は決算書）',
-      '開業届（個人）または登記簿謄本（法人）',
-    ],
-    steps: [
-      '商工会・商工会議所に事前相談（締切4週間前に訪問）',
-      '経営計画書・補助事業計画書を作成（補助事業の詳細を記載）',
-      '商工会から「事業支援計画書（様式4）」を受領',
-      'Jグランツでオンライン申請（GビズIDが必要）',
-      '採択発表後に事業実施（採択前の支出は対象外）',
-      '事業完了後、実績報告書を提出',
-      '補助金振込',
-    ],
-    note: '商工会への相談締切は公募締切の2週間前が多い。経営計画書の質が採否を左右する。',
+    id:2, title:'小規模事業者持続化補助金',
+    subtitle:'第20回 公募準備中（第19回 4/30 締切済）',
+    amount:'最大 200万円', rate:'補助率 2/3（インボイス特例で最大250万円）',
+    difficulty:3, effort:'10〜15時間',
+    desc:'販路開拓・広告・LP制作・チラシ・SNS・Webサイトリニューアルなど幅広く対象。FP相談・PharmaEightのマーケ投資を丸ごとカバーできる。',
+    deadline:null, deadlineLabel:'次回公募 時期待ち',
+    businesses:['pharma','fp','all'], categories:['sales'],
+    url:'https://www.jizokukahojokin.info/',
+    point:'セミナー告知LP・イベントフライヤー・SNS広告費・名刺・パンフレットも対象になる可能性あり',
+    docs:['経営計画書（自作フォーム）','補助事業計画書（自作フォーム）','事業支援計画書（商工会・商工会議所が発行）','直近の確定申告書（法人は決算書）','開業届（個人）または登記簿謄本（法人）'],
+    steps:['商工会・商工会議所に事前相談（締切4週間前に訪問）','経営計画書・補助事業計画書を作成','商工会から「事業支援計画書（様式4）」を受領','Jグランツでオンライン申請（GビズIDが必要）','採択発表後に事業実施（採択前の支出は対象外）','事業完了後、実績報告書を提出','補助金振込'],
+    note:'商工会への相談締切は公募締切の2週間前が多い。経営計画書の質が採否を左右する。',
   },
   {
-    id: 3,
-    title: 'キャリアアップ助成金',
-    subtitle: '正社員化コース・短時間労働者コース（令和8年度 改正版）',
-    amount: '最大 80万円/人',
-    rate: '短時間コース最大75万円 ／ 非正規情報開示加算20万円（新設）',
-    difficulty: 4,
-    effort: '15〜20時間',
-    desc: '非正規労働者を正社員化・社会保険加入させた際に支給。2026年度から「非正規情報開示加算」が新設。事前届出が必須なため、採用計画と連動させること。',
-    deadline: null,
-    deadlineLabel: '通年申請可（随時）',
-    businesses: ['hanahiraku', 'pharma'],
-    categories: ['employment'],
-    url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/part_haken/jigyounushi/career.html',
-    point: 'はなひらくスタッフの正規化に活用可。採用前に計画書の届出が必須なため早めに準備',
-    docs: [
-      'キャリアアップ計画書（取組「前日」までにハローワークへ届出）',
-      '就業規則（正規・非正規の区分が明記されたもの）',
-      '雇用契約書（変更前・変更後）',
-      '賃金台帳（6ヶ月分）',
-      '出勤簿・タイムカード（6ヶ月分）',
-      'ハローワーク確認書類・労働者の同意書',
-    ],
-    steps: [
-      'キャリアアップ計画書を作成し、取組前日までにハローワークへ届出（必須）',
-      '就業規則に正社員転換規定があるか確認・整備',
-      '正社員転換または賃上げを実施',
-      '転換後6ヶ月間、安定的に雇用・賃金支払い',
-      '6ヶ月分の賃金支払い翌日から2ヶ月以内に支給申請',
-      '審査後、約1年以内に振込',
-    ],
-    note: '取組「前日まで」の届出が絶対条件。後から届出すると対象外になる。社労士への依頼推奨。',
+    id:3, title:'キャリアアップ助成金',
+    subtitle:'正社員化コース・短時間労働者コース（令和8年度 改正版）',
+    amount:'最大 80万円/人', rate:'短時間コース最大75万円 ／ 非正規情報開示加算20万円（新設）',
+    difficulty:4, effort:'15〜20時間',
+    desc:'非正規労働者を正社員化・社会保険加入させた際に支給。2026年度から「非正規情報開示加算」が新設。事前届出が必須なため、採用計画と連動させること。',
+    deadline:null, deadlineLabel:'通年申請可（随時）',
+    businesses:['hanahiraku','pharma'], categories:['employment'],
+    url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/part_haken/jigyounushi/career.html',
+    point:'はなひらくスタッフの正規化に活用可。採用前に計画書の届出が必須なため早めに準備',
+    docs:['キャリアアップ計画書（取組「前日」までにハローワークへ届出）','就業規則（正規・非正規の区分が明記されたもの）','雇用契約書（変更前・変更後）','賃金台帳（6ヶ月分）','出勤簿・タイムカード（6ヶ月分）','ハローワーク確認書類・労働者の同意書'],
+    steps:['キャリアアップ計画書を作成し、取組前日までにハローワークへ届出（必須）','就業規則に正社員転換規定があるか確認・整備','正社員転換または賃上げを実施','転換後6ヶ月間、安定的に雇用・賃金支払い','6ヶ月分の賃金支払い翌日から2ヶ月以内に支給申請','審査後、約1年以内に振込'],
+    note:'取組「前日まで」の届出が絶対条件。後から届出すると対象外になる。社労士への依頼推奨。',
   },
   {
-    id: 4,
-    title: '人材開発支援助成金',
-    subtitle: '人への投資促進コース（令和8年度が最終年度のコースあり）',
-    amount: '最大 67.5万円',
-    rate: '訓練費用の最大75%補助 ／ 分割支給申請が可能に（令和8年3月改正）',
-    difficulty: 3,
-    effort: '8〜12時間',
-    desc: 'スタッフのリスキリング・資格取得・研修費用を補助。令和8年度が最終年度のコースがあり、今年中の申請が必須。分割申請でキャッシュフロー負担が軽減。',
-    deadline: '2027-03-31',
-    deadlineLabel: '令和8年度末（2027年3月）',
-    businesses: ['hanahiraku', 'pharma', 'all'],
-    categories: ['employment'],
-    url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/d01-1.html',
-    point: '今年度終了のコースあり。スタッフの研修計画があれば今すぐ申請準備を開始',
-    docs: [
-      '訓練計画届（訓練開始1ヶ月前までにハローワーク提出）',
-      '訓練実施機関との契約書・請求書',
-      '訓練受講証明書・修了証',
-      '賃金台帳・出勤簿（訓練期間分）',
-      '訓練費用の領収書',
-    ],
-    steps: [
-      '研修・訓練の内容・費用を確定',
-      '訓練計画届を作成し、開始1ヶ月前までにハローワーク提出',
-      '訓練実施',
-      '訓練終了日翌日から2ヶ月以内に支給申請',
-      '審査後、振込',
-    ],
-    note: '「人への投資促進コース」「事業展開等リスキリング支援コース」は令和8年度で終了。早急に対応を。',
+    id:4, title:'人材開発支援助成金',
+    subtitle:'人への投資促進コース（令和8年度が最終年度のコースあり）',
+    amount:'最大 67.5万円', rate:'訓練費用の最大75%補助 ／ 分割支給申請が可能に（令和8年3月改正）',
+    difficulty:3, effort:'8〜12時間',
+    desc:'スタッフのリスキリング・資格取得・研修費用を補助。令和8年度が最終年度のコースがあり、今年中の申請が必須。分割申請でキャッシュフロー負担が軽減。',
+    deadline:'2027-03-31', deadlineLabel:'令和8年度末（2027年3月）',
+    businesses:['hanahiraku','pharma','all'], categories:['employment'],
+    url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/d01-1.html',
+    point:'今年度終了のコースあり。スタッフの研修計画があれば今すぐ申請準備を開始',
+    docs:['訓練計画届（訓練開始1ヶ月前までにハローワーク提出）','訓練実施機関との契約書・請求書','訓練受講証明書・修了証','賃金台帳・出勤簿（訓練期間分）','訓練費用の領収書'],
+    steps:['研修・訓練の内容・費用を確定','訓練計画届を作成し、開始1ヶ月前までにハローワーク提出','訓練実施','訓練終了日翌日から2ヶ月以内に支給申請','審査後、振込'],
+    note:'「人への投資促進コース」「事業展開等リスキリング支援コース」は令和8年度で終了。早急に対応を。',
   },
   {
-    id: 5,
-    title: '特定求職者雇用開発助成金（障害者コース）',
-    subtitle: 'ハローワーク経由での障害者採用が条件',
-    amount: '最大 240万円',
-    rate: '重度以外の身体・知的障害者は最大120万円',
-    difficulty: 2,
-    effort: '3〜5時間',
-    desc: 'ハローワーク経由で障害者を採用した際に支給。重度障害者は最大240万円。はなひらくの新規スタッフ採用のたびに必ず確認すべき制度。',
-    deadline: null,
-    deadlineLabel: '通年申請可（随時）',
-    businesses: ['hanahiraku'],
-    categories: ['employment'],
-    url: 'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158169.html',
-    point: 'ハローワーク経由の採用にするだけで対象。採用のたびにチェックリスト確認を習慣化',
-    docs: [
-      'ハローワークからの紹介状（必須・これがないと対象外）',
-      '障害者手帳のコピー（または自立支援医療受給者証）',
-      '雇用契約書',
-      '賃金台帳（採用後6ヶ月分）',
-      '出勤簿・タイムカード',
-    ],
-    steps: [
-      '採用の際は必ずハローワークに求人を出す（これが必須条件）',
-      'ハローワークからの紹介状を受け取って採用',
-      '採用日から2週間以内に管轄ハローワークへ支給申請書類を提出',
-      '採用後6ヶ月間、継続して雇用・賃金支払い',
-      '6ヶ月後に第1回目の支給申請',
-    ],
-    note: '求人サイト・SNS・知人紹介で採用した場合はハローワーク経由ではないため対象外。',
+    id:5, title:'特定求職者雇用開発助成金（障害者コース）',
+    subtitle:'ハローワーク経由での障害者採用が条件',
+    amount:'最大 240万円', rate:'重度以外の身体・知的障害者は最大120万円',
+    difficulty:2, effort:'3〜5時間',
+    desc:'ハローワーク経由で障害者を採用した際に支給。重度障害者は最大240万円。はなひらくの新規スタッフ採用のたびに必ず確認すべき制度。',
+    deadline:null, deadlineLabel:'通年申請可（随時）',
+    businesses:['hanahiraku'], categories:['employment'],
+    url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000158169.html',
+    point:'ハローワーク経由の採用にするだけで対象。採用のたびにチェックリスト確認を習慣化',
+    docs:['ハローワークからの紹介状（必須・これがないと対象外）','障害者手帳のコピー（または自立支援医療受給者証）','雇用契約書','賃金台帳（採用後6ヶ月分）','出勤簿・タイムカード'],
+    steps:['採用の際は必ずハローワークに求人を出す（必須条件）','ハローワークからの紹介状を受け取って採用','採用日から2週間以内に管轄ハローワークへ書類提出','採用後6ヶ月間、継続して雇用・賃金支払い','6ヶ月後に第1回目の支給申請'],
+    note:'求人サイト・SNS・知人紹介で採用した場合はハローワーク経由ではないため対象外。',
   },
   {
-    id: 6,
-    title: '障害者作業施設設置等助成金',
-    subtitle: 'JEED（高齢・障害・求職者雇用支援機構）',
-    amount: '施設・設備費用の 2/3',
-    rate: '上限額は障害種別・人数・設備内容による',
-    difficulty: 3,
-    effort: '10〜15時間',
-    desc: '障害者が働きやすい作業環境整備（施設・設備・バリアフリー改修など）の費用を助成。新拠点の設備投資や既存施設の改修時に活用できる。',
-    deadline: null,
-    deadlineLabel: '通年申請可（随時）',
-    businesses: ['hanahiraku'],
-    categories: ['facility'],
-    url: 'https://www.jeed.go.jp/disability/subsidy/shisetsu_joseikin/index.html',
-    point: '塩尻・寿の設備更新・新拠点開設のたびに申請を検討。必ず「工事前に相談」が鉄則',
-    docs: [
-      '設置等計画書（JEEDへの事前認定申請書）',
-      '施設・設備の設計図・仕様書',
-      '見積書（2社以上の比較見積が望ましい）',
-      '障害者の雇用契約書・障害者手帳コピー',
-      '法人の定款・登記事項証明書',
-    ],
-    steps: [
-      '都道府県の高齢・障害・求職者雇用支援機構（JEED）に事前相談',
-      '設置等計画書を作成し、工事・購入「前」にJEEDへ提出・認定を受ける',
-      '認定後に工事・設備購入を実施',
-      '完了後、実績報告書・領収書を提出',
-      '審査後、助成金振込',
-    ],
-    note: '事前認定なしで着工・購入した場合は対象外。必ず工事・購入の前にJEEDへ相談すること。',
+    id:6, title:'障害者作業施設設置等助成金',
+    subtitle:'JEED（高齢・障害・求職者雇用支援機構）',
+    amount:'施設・設備費用の 2/3', rate:'上限額は障害種別・人数・設備内容による',
+    difficulty:3, effort:'10〜15時間',
+    desc:'障害者が働きやすい作業環境整備（施設・設備・バリアフリー改修など）の費用を助成。新拠点の設備投資や既存施設の改修時に活用できる。',
+    deadline:null, deadlineLabel:'通年申請可（随時）',
+    businesses:['hanahiraku'], categories:['facility'],
+    url:'https://www.jeed.go.jp/disability/subsidy/shisetsu_joseikin/index.html',
+    point:'塩尻・寿の設備更新・新拠点開設のたびに申請を検討。必ず「工事前に相談」が鉄則',
+    docs:['設置等計画書（JEEDへの事前認定申請書）','施設・設備の設計図・仕様書','見積書（2社以上の比較見積が望ましい）','障害者の雇用契約書・障害者手帳コピー','法人の定款・登記事項証明書'],
+    steps:['都道府県のJEED（高齢・障害・求職者雇用支援機構）に事前相談','設置等計画書を作成し、工事・購入「前」にJEEDへ提出・認定を受ける','認定後に工事・設備購入を実施','完了後、実績報告書・領収書を提出','審査後、助成金振込'],
+    note:'事前認定なしで着工・購入した場合は対象外。必ず工事・購入の前にJEEDへ相談すること。',
   },
   {
-    id: 7,
-    title: 'ヤマト福祉財団 障がい者福祉助成',
-    subtitle: '設備・機器購入 ／ 2026年度募集（〜12月末購入完了）',
-    amount: '審査による（数十〜数百万円の実績あり）',
-    rate: '国・自治体補助金との「併用可能」な場合あり',
-    difficulty: 3,
-    effort: '8〜12時間',
-    desc: '障がい者の自立支援・就労支援に取り組む施設を支援する民間財団助成。2026年12月末までに購入完了が条件。国の補助金と組み合わせられる可能性あり。',
-    deadline: '2026-12-31',
-    deadlineLabel: '購入完了 2026年12月末',
-    businesses: ['hanahiraku'],
-    categories: ['facility', 'zaidan'],
-    url: 'https://www.yamato-fukushi.jp/works/subsidy.html',
-    point: '民間財団なので国の助成金と併用可能。設備購入計画があれば早めに公式サイトで要項確認',
-    docs: [
-      '申請書（財団所定書式 ※公式サイトからDL）',
-      '事業計画書（購入する設備の必要性・効果を記載）',
-      '購入予定設備の見積書・カタログ',
-      '法人の登記事項証明書',
-      '直近2期分の財務書類（収支決算書など）',
-      '施設の紹介資料（パンフレット等）',
-    ],
-    steps: [
-      'ヤマト福祉財団の公式サイトで最新の募集要項を確認',
-      '購入したい設備と購入の必要性を整理',
-      '申請書・事業計画書を作成',
-      '書類一式を財団へ郵送提出',
-      '財団による審査・選考（書類審査 ± ヒアリング）',
-      '採択通知後に設備購入（2026年12月末までに完了）',
-      '購入後、実績報告書・領収書を財団へ提出',
-    ],
-    note: '民間財団のため審査基準が異なる。「なぜこの設備が必要か」の説明力が採否を左右する。',
+    id:7, title:'ヤマト福祉財団 障がい者福祉助成',
+    subtitle:'設備・機器購入 ／ 2026年度募集（〜12月末購入完了）',
+    amount:'審査による（数十〜数百万円実績あり）', rate:'国・自治体補助金との「併用可能」な場合あり',
+    difficulty:3, effort:'8〜12時間',
+    desc:'障がい者の自立支援・就労支援に取り組む施設を支援する民間財団助成。2026年12月末までに購入完了が条件。国の補助金と組み合わせられる可能性あり。',
+    deadline:'2026-12-31', deadlineLabel:'購入完了 2026年12月末',
+    businesses:['hanahiraku'], categories:['facility','zaidan'],
+    url:'https://www.yamato-fukushi.jp/works/subsidy.html',
+    point:'民間財団なので国の助成金と併用可能。設備購入計画があれば早めに公式サイトで要項確認',
+    docs:['申請書（財団所定書式 ※公式サイトからDL）','事業計画書（購入する設備の必要性・効果を記載）','購入予定設備の見積書・カタログ','法人の登記事項証明書','直近2期分の財務書類（収支決算書など）','施設の紹介資料（パンフレット等）'],
+    steps:['ヤマト福祉財団の公式サイトで最新の募集要項を確認','購入したい設備と購入の必要性を整理','申請書・事業計画書を作成','書類一式を財団へ郵送提出','財団による審査・選考','採択通知後に設備購入（2026年12月末までに完了）','購入後、実績報告書・領収書を財団へ提出'],
+    note:'民間財団のため審査基準が異なる。「なぜこの設備が必要か」の説明力が採否を左右する。',
   },
   {
-    id: 8,
-    title: '医療DX推進補助金（薬局向け）',
-    subtitle: 'オンライン資格確認・電子処方箋・診療報酬加算',
-    amount: 'システム改修費 補助あり',
-    rate: '診療報酬加算（医療DX推進体制整備加算）で継続的な収益増も',
-    difficulty: 2,
-    effort: '3〜8時間',
-    desc: '薬局向けにオンライン資格確認・電子処方箋導入の補助金あり。DX推進体制を整備することで診療報酬の加算算定も可能になる。PharmaEight薬局でシステム更新時に必ず確認。',
-    deadline: null,
-    deadlineLabel: '随時（厚労省・都道府県窓口で確認）',
-    businesses: ['pharma'],
-    categories: ['it'],
-    url: 'https://www.mhlw.go.jp/stf/iryoudx.html',
-    point: '補助金＋診療報酬加算で二重にメリットあり。システム更新のタイミングを逃さない',
-    docs: [
-      '薬局開設許可証',
-      '保険薬局指定証',
-      'システム改修に係る見積書・請求書',
-      '補助金申請書（各都道府県の様式）',
-    ],
-    steps: [
-      '厚生労働省の最新ページまたは都道府県薬務課に問い合わせ',
-      '導入するシステムを選定（ベンダーに補助金対応か確認）',
-      '申請書を入手・作成し提出（改修前申請が必要な場合あり）',
-      'システム改修・導入',
-      '実績報告・補助金受給',
-      '診療報酬加算の届出（地方厚生局に施設基準届出）',
-    ],
-    note: '制度が複数に分かれているため都道府県薬務課に事前確認推奨。マイナ保険証対応も合わせて確認を。',
+    id:8, title:'医療DX推進補助金（薬局向け）',
+    subtitle:'オンライン資格確認・電子処方箋・診療報酬加算',
+    amount:'システム改修費 補助あり', rate:'診療報酬加算（医療DX推進体制整備加算）で収益増も',
+    difficulty:2, effort:'3〜8時間',
+    desc:'薬局向けにオンライン資格確認・電子処方箋導入の補助金あり。DX推進体制を整備することで診療報酬の加算算定も可能。PharmaEight薬局でシステム更新時に必ず確認。',
+    deadline:null, deadlineLabel:'随時（厚労省・都道府県窓口で確認）',
+    businesses:['pharma'], categories:['it'],
+    url:'https://www.mhlw.go.jp/stf/iryoudx.html',
+    point:'補助金＋診療報酬加算で二重にメリットあり。システム更新のタイミングを逃さない',
+    docs:['薬局開設許可証','保険薬局指定証','システム改修に係る見積書・請求書','補助金申請書（各都道府県の様式）'],
+    steps:['厚生労働省の最新ページまたは都道府県薬務課に問い合わせ','導入するシステムを選定（ベンダーに補助金対応か確認）','申請書を入手・作成し提出（改修前申請が必要な場合あり）','システム改修・導入','実績報告・補助金受給','診療報酬加算の届出（地方厚生局に施設基準届出）'],
+    note:'制度が複数に分かれているため都道府県薬務課に事前確認推奨。マイナ保険証対応も合わせて確認を。',
   },
   {
-    id: 9,
-    title: '長野県 中小企業賃上げ・生産性向上サポート補助金',
-    subtitle: '国の業務改善助成金への上乗せ補助（長野県独自制度）',
-    amount: '最大 960万円',
-    rate: '業務改善助成金（国）＋長野県上乗せ補助（2割増）',
-    difficulty: 2,
-    effort: '3〜5時間（国の制度申請後に追加申請）',
-    desc: '国の「業務改善助成金」を受給した県内事業者への上乗せ補助。国の補助額の最大2割増し。「社員の子育て応援宣言」「パートナーシップ構築宣言」が必要。',
-    deadline: '2027-03-10',
-    deadlineLabel: '令和9年3月10日',
-    businesses: ['hanahiraku', 'pharma'],
-    categories: ['employment', 'nagano'],
-    url: 'https://www.pref.nagano.lg.jp/rodokoyo/seisanseisupport.html',
-    point: '国の業務改善助成金と必ずセットで申請。長野県内事業者限定。宣言2つが事前条件',
-    docs: [
-      '業務改善助成金の交付額確定・支給決定通知書（国の制度の書類）',
-      '長野県補助金申請書兼実績報告書',
-      '「社員の子育て応援宣言」証明書',
-      '「パートナーシップ構築宣言」書（中小機構）',
-    ],
-    steps: [
-      '「社員の子育て応援宣言」に登録（長野県サイトから）',
-      '「パートナーシップ構築宣言」を中小機構に提出',
-      '国の「業務改善助成金」を長野労働局へ申請',
-      '国の支給決定通知書を受領',
-      '長野県の上乗せ補助を申請（令和9年3月10日締切）',
-    ],
-    note: '2つの宣言が事前条件。まず国の業務改善助成金から着手すること。',
+    id:9, title:'長野県 中小企業賃上げ・生産性向上サポート補助金',
+    subtitle:'国の業務改善助成金への上乗せ補助（長野県独自制度）',
+    amount:'最大 960万円', rate:'業務改善助成金（国）＋長野県上乗せ補助（2割増）',
+    difficulty:2, effort:'3〜5時間（国の制度申請後に追加申請）',
+    desc:'国の「業務改善助成金」を受給した県内事業者への上乗せ補助。国の補助額の最大2割増し。「社員の子育て応援宣言」「パートナーシップ構築宣言」が必要。',
+    deadline:'2027-03-10', deadlineLabel:'令和9年3月10日',
+    businesses:['hanahiraku','pharma'], categories:['employment','nagano'],
+    url:'https://www.pref.nagano.lg.jp/rodokoyo/seisanseisupport.html',
+    point:'国の業務改善助成金と必ずセットで申請。長野県内事業者限定。宣言2つが事前条件',
+    docs:['業務改善助成金の交付額確定・支給決定通知書','長野県補助金申請書兼実績報告書','「社員の子育て応援宣言」証明書','「パートナーシップ構築宣言」書（中小機構）'],
+    steps:['「社員の子育て応援宣言」に登録（長野県サイトから）','「パートナーシップ構築宣言」を中小機構に提出','国の「業務改善助成金」を長野労働局へ申請','国の支給決定通知書を受領','長野県の上乗せ補助を申請（令和9年3月10日締切）'],
+    note:'2つの宣言が事前条件。まず国の業務改善助成金から着手すること。',
   },
   {
-    id: 10,
-    title: '日本財団 公益・福祉募集',
-    subtitle: '毎年10月に申請受付（2026年度→2025年10月に受付済、次回は2027年10月）',
-    amount: '数十〜数千万円（事業規模による）',
-    rate: '民間財団のため補助率は定めなし、事業費全額を助成する場合も',
-    difficulty: 5,
-    effort: '30〜50時間（詳細な事業計画書が必要）',
-    desc: '社会福祉・教育・文化などの事業を支援する日本最大規模の民間財団。競争率が高いが採択されると大型資金になる。非営利法人格が必要（社会福祉法人等）。',
-    deadline: '2026-10-31',
-    deadlineLabel: '次回申請 2026年10月（予定）',
-    businesses: ['hanahiraku'],
-    categories: ['zaidan'],
-    url: 'https://nippon-foundation.my.site.com/GrantPrograms/s/',
-    point: '採択率は高くないが、社会福祉法人はなひらくとして挑戦する価値あり。9月から準備を',
-    docs: [
-      '申請書（日本財団助成ポータルでオンライン作成）',
-      '法人の定款',
-      '直近2期分の財務書類（収支決算書・貸借対照表）',
-      '事業計画書（詳細なスケジュール・予算・効果指標）',
-      '役員名簿・組織図',
-      '施設紹介資料・写真',
-    ],
-    steps: [
-      '日本財団助成ポータルでアカウント作成',
-      '9〜10月の申請期間に合わせて事業計画書を作成（9月から着手推奨）',
-      '10月の申請受付期間中にオンライン提出',
-      '一次審査（書類選考）',
-      '二次審査（ヒアリングの可能性）',
-      '採択通知（翌年1〜2月ごろ）',
-      '事業実施・中間報告・最終報告',
-    ],
-    note: '競争率が高いため、「なぜこの事業が社会に必要か」の論理構成と数値目標が重要。',
+    id:10, title:'日本財団 公益・福祉募集',
+    subtitle:'毎年10月に申請受付（次回は2026年10月予定）',
+    amount:'数十〜数千万円（事業規模による）', rate:'民間財団のため補助率は定めなし、事業費全額助成の場合も',
+    difficulty:5, effort:'30〜50時間',
+    desc:'社会福祉・教育・文化などの事業を支援する日本最大規模の民間財団。競争率が高いが採択されると大型資金になる。非営利法人格が必要（社会福祉法人等）。',
+    deadline:'2026-10-31', deadlineLabel:'次回申請 2026年10月（予定）',
+    businesses:['hanahiraku'], categories:['zaidan'],
+    url:'https://nippon-foundation.my.site.com/GrantPrograms/s/',
+    point:'採択率は高くないが、社会福祉法人はなひらくとして挑戦する価値あり。9月から準備を',
+    docs:['申請書（日本財団助成ポータルでオンライン作成）','法人の定款','直近2期分の財務書類','事業計画書（詳細なスケジュール・予算・効果指標）','役員名簿・組織図','施設紹介資料・写真'],
+    steps:['日本財団助成ポータルでアカウント作成','9月から事業計画書の作成を開始','10月の申請受付期間にオンライン提出','一次審査（書類選考）','二次審査（ヒアリングの可能性）','採択通知（翌年1〜2月ごろ）','事業実施・中間報告・最終報告'],
+    note:'競争率が高いため、「なぜこの事業が社会に必要か」の論理構成と数値目標が重要。',
   },
   {
-    id: 11,
-    title: '損保ジャパン ウェルフェア財団 助成',
-    subtitle: '福祉事業・実践活動への助成（毎年公募）',
-    amount: '数十万〜数百万円（事業内容による）',
-    rate: '民間財団のため補助率は定めなし',
-    difficulty: 4,
-    effort: '15〜20時間',
-    desc: '障がい者・高齢者の福祉向上に取り組む団体への助成。実践的な活動・調査研究・機器整備などが対象。国の補助金と並行して申請できる民間財団。',
-    deadline: null,
-    deadlineLabel: '毎年公募（時期は公式で確認）',
-    businesses: ['hanahiraku'],
-    categories: ['facility', 'zaidan'],
-    url: 'https://www.sompo-wf.org/koubo.html',
-    point: 'はなひらくの福祉活動実績を活かして申請可能。国補助との併用を検討',
-    docs: [
-      '申請書（財団所定書式）',
-      '事業計画書・予算書',
-      '法人の概要書・定款',
-      '直近の財務書類',
-      '活動実績を示す資料',
-    ],
-    steps: [
-      '損保ジャパン財団公式サイトで今年度の公募要項を確認',
-      '対象事業・申請資格を確認',
-      '申請書・事業計画書を作成',
-      '書類を提出（郵送または電子申請）',
-      '財団による審査',
-      '採択後、事業実施・報告',
-    ],
-    note: '公募時期が毎年変わることがある。定期的に公式サイトを確認すること。',
+    id:11, title:'損保ジャパン ウェルフェア財団 助成',
+    subtitle:'福祉事業・実践活動への助成（毎年公募）',
+    amount:'数十万〜数百万円（事業内容による）', rate:'民間財団のため補助率は定めなし',
+    difficulty:4, effort:'15〜20時間',
+    desc:'障がい者・高齢者の福祉向上に取り組む団体への助成。実践的な活動・調査研究・機器整備などが対象。国の補助金と並行して申請できる民間財団。',
+    deadline:null, deadlineLabel:'毎年公募（時期は公式で確認）',
+    businesses:['hanahiraku'], categories:['facility','zaidan'],
+    url:'https://www.sompo-wf.org/koubo.html',
+    point:'はなひらくの福祉活動実績を活かして申請可能。国補助との併用を検討',
+    docs:['申請書（財団所定書式）','事業計画書・予算書','法人の概要書・定款','直近の財務書類','活動実績を示す資料'],
+    steps:['損保ジャパン財団公式サイトで今年度の公募要項を確認','対象事業・申請資格を確認','申請書・事業計画書を作成','書類を提出（郵送または電子申請）','財団による審査','採択後、事業実施・報告'],
+    note:'公募時期が毎年変わることがある。定期的に公式サイトを確認すること。',
   },
 ];
 
+/* ─── TAG CONFIG ─── */
 const BIZ = {
-  hanahiraku: { cls: 't-hanahiraku', label: '🌸 はなひらく' },
-  pharma:     { cls: 't-pharma',     label: '💊 PharmaEight' },
-  fp:         { cls: 't-fp',         label: '💼 FP相談' },
-  all:        { cls: 't-all',        label: '🏢 全事業' },
+  hanahiraku:{cls:'t-hana',  label:'🌸 はなひらく'},
+  pharma:    {cls:'t-pharma',label:'💊 PharmaEight'},
+  fp:        {cls:'t-fp',    label:'💼 FP相談'},
+  all:       {cls:'t-all',   label:'🏢 全事業'},
 };
 const CAT = {
-  it:         { cls: 't-it',         label: '💻 IT/DX' },
-  employment: { cls: 't-employment', label: '👥 雇用・人材' },
-  sales:      { cls: 't-sales',      label: '📈 販路開拓' },
-  facility:   { cls: 't-facility',   label: '🏗️ 設備投資' },
-  nagano:     { cls: 't-nagano',     label: '📍 長野県' },
-  zaidan:     { cls: 't-all',        label: '🏛️ 財団' },
+  it:        {cls:'t-it',  label:'💻 IT/DX'},
+  employment:{cls:'t-emp', label:'👥 雇用・人材'},
+  sales:     {cls:'t-sale',label:'📈 販路開拓'},
+  facility:  {cls:'t-fac', label:'🏗 設備投資'},
+  nagano:    {cls:'t-nag', label:'📍 長野県'},
+  zaidan:    {cls:'t-zai', label:'🏛 財団'},
 };
 
-function daysUntil(s) {
-  if (!s) return null;
-  return Math.ceil((new Date(s) - TODAY) / 86400000);
+/* ─── UTILS ─── */
+function daysLeft(s){ if(!s)return null; return Math.ceil((new Date(s)-TODAY)/86400000); }
+function urgency(d){
+  if(d===null)return'ongoing';
+  if(d<=0)return'closed';
+  if(d<=30)return'urgent';
+  if(d<=60)return'warning';
+  return'normal';
 }
-function getUrg(days) {
-  if (days === null) return 'ongoing';
-  if (days <= 0)  return 'closed';
-  if (days <= 30) return 'urgent';
-  if (days <= 60) return 'warning';
-  return 'normal';
+const ACC  = {urgent:'acc-urgent',warning:'acc-warning',normal:'acc-normal',ongoing:'acc-ongoing',closed:'acc-closed'};
+const UB   = {urgent:'ub-urgent', warning:'ub-warning', normal:'ub-normal', ongoing:'ub-ongoing', closed:'ub-closed'};
+const DAYS_CLS = {urgent:'days-urgent',warning:'days-warning',normal:'days-normal',ongoing:'days-ongoing',closed:'days-closed'};
+function badgeText(urg,d){
+  if(urg==='ongoing')return '通年申請';
+  if(urg==='closed') return '締切済';
+  return `残 ${d}日`;
 }
-const UB_CLS = { urgent:'ub-urgent', warning:'ub-warning', normal:'ub-normal', ongoing:'ub-ongoing', closed:'ub-closed' };
-const STRIPE  = { urgent:'stripe-urgent', warning:'stripe-warning', normal:'stripe-normal', ongoing:'stripe-ongoing', closed:'stripe-closed' };
-const DAYS_CLS = { urgent:'days-urgent', warning:'days-warning', normal:'days-normal', ongoing:'days-ongoing', closed:'days-ongoing' };
+function starsHtml(n){
+  return Array.from({length:5},(_,i)=>
+    `<span class="${i<n?'star-filled':'star-empty'}">★</span>`
+  ).join('');
+}
 
-function badgeText(urg, days) {
-  if (urg === 'ongoing') return '通年申請';
-  if (urg === 'closed')  return '締切済';
-  return `残 ${days}日`;
-}
-function stars(n) {
-  return '★'.repeat(n) + '☆'.repeat(5-n);
-}
+/* ─── FILTER STATE ─── */
+let active = 'all';
 
-let activeFilter = 'all';
-function match(g) {
-  if (activeFilter === 'all') return true;
-  if (activeFilter.startsWith('biz-')) return g.businesses.includes(activeFilter.replace('biz-',''));
-  if (activeFilter.startsWith('cat-')) return g.categories.includes(activeFilter.replace('cat-',''));
+function match(g){
+  if(active==='all') return true;
+  if(active.startsWith('biz-')) return g.businesses.includes(active.slice(4));
+  if(active.startsWith('cat-')) return g.categories.includes(active.slice(4));
   return true;
 }
 
-function render() {
-  const filtered = GRANTS.filter(match);
-  document.getElementById('stat-total').textContent = filtered.length;
-  const urgCnt = filtered.filter(g => {
-    const d = daysUntil(g.deadline);
-    return d !== null && d > 0 && d <= 60;
-  }).length;
-  document.getElementById('stat-urgent').textContent = urgCnt;
+/* ─── RENDER ─── */
+function render(){
+  const list = GRANTS.filter(match);
+  document.getElementById('stat-total').textContent = list.length;
+  const urg60 = list.filter(g=>{ const d=daysLeft(g.deadline); return d!==null&&d>0&&d<=60; }).length;
+  document.getElementById('stat-urgent').textContent = urg60;
 
-  document.getElementById('cards-grid').innerHTML = filtered.map(g => {
-    const days = daysUntil(g.deadline);
-    const urg  = getUrg(days);
+  const grid = document.getElementById('grid');
+  if(!list.length){
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>該当する補助金がありません</p></div>`;
+    return;
+  }
 
-    const bizTags = g.businesses.map(b => {
-      const v = BIZ[b] || { cls:'t-all', label: b };
+  grid.innerHTML = list.map(g=>{
+    const d   = daysLeft(g.deadline);
+    const urg = urgency(d);
+
+    const bizTags = g.businesses.map(b=>{
+      const v=BIZ[b]||{cls:'t-all',label:b};
       return `<span class="tag ${v.cls}">${v.label}</span>`;
     }).join('');
-    const catTags = g.categories.map(c => {
-      const v = CAT[c] || { cls:'t-all', label: c };
+    const catTags = g.categories.map(c=>{
+      const v=CAT[c]||{cls:'t-zai',label:c};
       return `<span class="tag ${v.cls}">${v.label}</span>`;
     }).join('');
 
-    const daysHtml = urg === 'ongoing' ? `<span class="${DAYS_CLS[urg]} days-ongoing">通年申請可</span>`
-      : urg === 'closed' ? `<span class="days-closed">締切済</span>`
-      : `<span class="${DAYS_CLS[urg]}">${days > 0 ? `残 ${days}日` : '締切済'}</span>`;
+    const daysHtml = urg==='ongoing'
+      ? `<span class="dl-days days-ongoing">通年申請可</span>`
+      : urg==='closed'
+      ? `<span class="dl-days days-closed">締切済</span>`
+      : `<span class="dl-days ${DAYS_CLS[urg]}">残 ${d}日</span>`;
 
-    const docItems = g.docs.map(d => `<li>${d}</li>`).join('');
-    const stepItems = g.steps.map((s, i) =>
-      `<li><span class="step-num">${i+1}</span>${s}</li>`
+    const docsHtml = g.docs.map(doc=>`<li>${doc}</li>`).join('');
+    const stepsHtml = g.steps.map((s,i)=>
+      `<li><span class="snum">${i+1}</span>${s}</li>`
     ).join('');
 
     return `
-<div class="card" id="card-${g.id}">
-  <div class="card-stripe ${STRIPE[urg]}"></div>
-  <div class="card-body">
-    <div class="card-tags">${bizTags}${catTags}</div>
-    <div class="card-header2">
-      <div class="card-title-block">
-        <div class="card-title">${g.title}</div>
-        <div class="card-subtitle">${g.subtitle}</div>
+<div class="card">
+  <div class="card-row">
+    <div class="card-accent ${ACC[urg]}"></div>
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-tags">${bizTags}${catTags}</div>
+        <span class="ubadge ${UB[urg]}">${badgeText(urg,d)}</span>
       </div>
-      <span class="urgency-badge ${UB_CLS[urg]}">${badgeText(urg, days)}</span>
-    </div>
-    <div class="card-amount-row">
-      <span class="card-amount">${g.amount}</span>
-    </div>
-    <div class="card-rate">${g.rate}</div>
-    <div class="card-meta-row">
-      <div class="meta-item">
-        <span class="stars">${stars(g.difficulty)}</span>
-        <span>申請難易度</span>
+      <div class="card-title">${g.title}</div>
+      <div class="card-sub">${g.subtitle}</div>
+      <div class="amount-row">
+        <span class="amount">${g.amount}</span>
       </div>
-      <div class="meta-item">⏱ 目安 ${g.effort}</div>
-    </div>
-    <div class="card-desc">${g.desc}</div>
-    <div class="point-box">💡 ${g.point}</div>
-    <div class="deadline-row">
-      📅 締切：<span class="deadline-val">${g.deadlineLabel}</span>
-      　${daysHtml}
-    </div>
-    <button class="expand-btn" onclick="toggleDetail(${g.id}, this)">
-      <span>📋 必要書類・申請手順を見る</span>
-      <span class="expand-arrow">▼</span>
-    </button>
-    <div class="card-detail" id="detail-${g.id}">
-      <div class="detail-section">
-        <div class="detail-title">必要書類</div>
-        <ul class="doc-list">${docItems}</ul>
+      <div class="rate-note">${g.rate}</div>
+      <div class="meta-row">
+        <div class="meta-item"><span class="stars">${starsHtml(g.difficulty)}</span><span>難易度</span></div>
+        <div class="meta-item">⏱ 目安 ${g.effort}</div>
       </div>
-      <div class="detail-section">
-        <div class="detail-title">申請ステップ</div>
-        <ul class="step-list">${stepItems}</ul>
+      <div class="card-desc">${g.desc}</div>
+      <div class="point-box">💡 ${g.point}</div>
+      <div class="deadline-row">
+        <span class="dl-label">📅 締切</span>
+        <span class="dl-val">${g.deadlineLabel}</span>
+        ${daysHtml}
       </div>
-      ${g.note ? `<div class="detail-section"><div class="detail-note">${g.note}</div></div>` : ''}
+      <button class="expand-btn" onclick="toggle(${g.id},this)">
+        <span class="expand-label">📋 必要書類・申請手順を見る</span>
+        <span class="expand-arrow">▼</span>
+      </button>
+      <div class="card-detail" id="det-${g.id}">
+        <div class="detail-sec">
+          <div class="detail-head">📄 必要書類</div>
+          <ul class="doc-list">${docsHtml}</ul>
+        </div>
+        <div class="detail-sec">
+          <div class="detail-head">✅ 申請ステップ</div>
+          <ul class="step-list">${stepsHtml}</ul>
+        </div>
+        ${g.note?`<div class="detail-sec"><div class="detail-note">${g.note}</div></div>`:''}
+      </div>
     </div>
   </div>
-  <div class="card-footer2">
+  <div class="card-foot">
     <a class="card-link" href="${g.url}" target="_blank" rel="noopener">公式サイトで確認 →</a>
-    <span style="font-size:.72rem; color:var(--muted)">ID: ${g.id}</span>
+    <span class="card-id">#${g.id}</span>
   </div>
 </div>`;
   }).join('');
 }
 
-function toggleDetail(id, btn) {
-  const el = document.getElementById('detail-' + id);
-  const open = el.classList.toggle('open');
+function toggle(id, btn){
+  const det = document.getElementById('det-'+id);
+  const open = det.classList.toggle('open');
   btn.classList.toggle('open', open);
-  btn.querySelector('span:first-child').textContent = open ? '📋 閉じる' : '📋 必要書類・申請手順を見る';
+  btn.querySelector('.expand-label').textContent = open ? '📋 閉じる' : '📋 必要書類・申請手順を見る';
 }
 
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    activeFilter = btn.dataset.filter;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+/* ─── FILTER BUTTONS ─── */
+document.querySelectorAll('.fbtn').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    active = b.dataset.f;
+    document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
     render();
   });
 });
