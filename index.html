@@ -467,7 +467,7 @@ body {
       </div>
       <div class="hero-stat">
         <div class="hero-stat-label">最大受給額（全件合計）</div>
-        <div class="hero-stat-val">約1,800<span style="font-size:.9rem;font-weight:500">万円+</span></div>
+        <div class="hero-stat-val">約4,000<span style="font-size:.9rem;font-weight:500">万円+</span></div>
         <div class="hero-stat-sub">重複受給可能なものあり</div>
       </div>
       <div class="hero-stat">
@@ -477,7 +477,7 @@ body {
       </div>
       <div class="hero-stat">
         <div class="hero-stat-label">通年・随時申請可</div>
-        <div class="hero-stat-val" style="color:#4ade80">5</div>
+        <div class="hero-stat-val" id="stat-ongoing" style="color:#4ade80">—</div>
         <div class="hero-stat-sub">件（いつでも申請OK）</div>
       </div>
     </div>
@@ -683,6 +683,62 @@ const GRANTS = [
     steps:['損保ジャパン財団公式サイトで今年度の公募要項を確認','対象事業・申請資格を確認','申請書・事業計画書を作成','書類を提出（郵送または電子申請）','財団による審査','採択後、事業実施・報告'],
     note:'公募時期が毎年変わることがある。定期的に公式サイトを確認すること。',
   },
+  {
+    id:12, title:'WAM助成（社会福祉振興助成事業）',
+    subtitle:'独立行政法人 福祉医療機構（WAMNET） ／ 毎年12月〜1月募集',
+    amount:'最大 700万円（地域）〜900万円（全国）', rate:'助成率は事業種別・規模による（総額約6億円）',
+    difficulty:4, effort:'20〜30時間',
+    desc:'NPO法人・社会福祉法人などを対象とした厚労省系最大規模の福祉助成。高齢者・障害者の自立支援・地域共生社会の実現を目的とする事業が対象。毎年12月末ごろ募集開始、翌1月下旬締切。令和8年度（2026年度）は締切済み。次回は2026年12月ごろ募集予定。',
+    deadline:null, deadlineLabel:'次回：2027年1月下旬（2026年12月ごろ募集開始）',
+    businesses:['hanahiraku'], categories:['zaidan','employment'],
+    url:'https://www.wam.go.jp/hp/cat/wamjosei/',
+    point:'はなひらくの社会福祉法人格・実績で申請可能な最大クラスの福祉助成。12月の募集開始と同時に動くのが鉄則',
+    docs:['申請書（WAMオンライン助成申請システムで作成）','事業計画書（年間活動内容・効果指標）','法人の定款','直近2期分の財務書類（収支決算書）','役員名簿','活動実績資料・写真'],
+    steps:['wam.go.jpで最新の募集要項を確認（12月ごろ公開）','WAMオンライン助成申請システムでアカウント作成','事業計画書・予算書を作成（11月から準備開始推奨）','申請書類を揃えてオンライン提出（1月下旬締切）','WAMによる書類審査','採択通知（4月ごろ）','事業実施・中間報告・最終報告'],
+    note:'令和8年度（2026年度）の申請は2026年1月26日で締切済み。令和9年度は2026年12月ごろ募集開始予定。11月から準備を始めること。',
+  },
+  {
+    id:13, title:'松本市中小企業者社会変革対応促進事業補助金',
+    subtitle:'DX・デジタル化・省エネ設備更新 ／ 令和7年度実施中',
+    amount:'最大 30万円', rate:'補助率 2/3',
+    difficulty:2, effort:'3〜5時間',
+    desc:'松本市内の中小企業・個人事業主のDX・デジタル化および省エネ設備更新を支援。クラウドシステム導入費・業務効率化ツール・省エネ設備購入費が対象。IT導入補助金と組み合わせて申請すると自己負担をさらに圧縮できる。',
+    deadline:null, deadlineLabel:'令和7年度随時受付中（年度内・要確認）',
+    businesses:['hanahiraku','pharma'], categories:['it','nagano'],
+    url:'https://www.city.matsumoto.nagano.jp/soshiki/75/111393.html',
+    point:'申請が比較的シンプル。IT導入補助金（国）との組み合わせで実質負担を最小化できる',
+    docs:['補助金申請書（松本市所定様式）','導入するシステム・設備の見積書・カタログ','直近の確定申告書または決算書','法人の場合は登記事項証明書'],
+    steps:['松本市産業振興課（0263-34-3217）に事前相談','補助金申請書を取得・記入','見積書など添付書類を揃える','松本市役所に申請書類を提出','市による審査・交付決定','設備導入・購入','実績報告書と領収書を提出'],
+    note:'松本市内に事業所がある中小企業・個人事業主が対象。購入前の交付決定が必要なため、導入を急ぐ場合は先に相談を。',
+  },
+  {
+    id:14, title:'長野市中小企業者人材育成事業補助金',
+    subtitle:'一般型（上限30万円）・デジタル型（上限100万円）',
+    amount:'最大 100万円', rate:'1人あたりデジタル型最大50万円（年2回申請可）',
+    difficulty:2, effort:'3〜5時間',
+    desc:'長野市内中小企業のスタッフ研修・資格取得費を補助。デジタル型は経産省「マナビDX」掲載のDX・AI系講習が対象で1人最大50万円。スタッフのAI・デジタルスキル向上に最適。年2回申請可。',
+    deadline:null, deadlineLabel:'年2回申請可（長野市産業政策課に要確認）',
+    businesses:['hanahiraku','pharma','fp'], categories:['employment','nagano'],
+    url:'https://www.city.nagano.nagano.jp/n140300/contents/p003893.html',
+    point:'DX研修費が1人50万円まで補助。スタッフのAI・ITスキルアップ費用をほぼ全額カバーできる',
+    docs:['補助金申請書（長野市所定様式）','研修・講座の申込書・カリキュラム','費用の見積書・請求書','研修修了証・受講証明書（実績報告時）','賃金台帳・雇用契約書'],
+    steps:['長野市産業政策課に事前相談','受講する研修を選定（デジタル型は経産省マナビDX掲載講座）','申請書類を作成・提出（研修開始前に申請が必要な場合あり）','研修受講','修了後、実績報告書と証明書を提出','補助金振込'],
+    note:'デジタル型は経産省「マナビDX」掲載のスキルレベル2以上の講習が対象。長野市内に本社を有する中小企業が条件。',
+  },
+  {
+    id:15, title:'長野県エネルギーコスト削減助成金',
+    subtitle:'推進コース（補助率3/4・上限1,500万円）・基本コース（補助率1/2）',
+    amount:'最大 1,500万円', rate:'推進コース 3/4 ／ 基本コース 1/2',
+    difficulty:3, effort:'8〜12時間',
+    desc:'省エネ・再エネ設備の更新・新設費用を補助。高効率エアコン・LED照明・太陽光パネル導入も対象。障害福祉施設・医療機関は別途専用受付あり。光熱費を削減しつつ大型補助が受けられる長野県独自制度。',
+    deadline:'2026-09-30', deadlineLabel:'2026年9月30日（福祉・医療施設は中旬から別途受付）',
+    businesses:['hanahiraku','pharma'], categories:['facility','nagano'],
+    url:'https://www.pref.nagano.lg.jp/keieishien/energycost.html',
+    point:'施設の空調・照明更新と合わせると費用の最大3/4が補助。エネルギーコスト削減で長期的な収益改善も',
+    docs:['助成金申請書（長野県所定様式）','省エネ設備の見積書・カタログ','設備設置場所の図面','直近の電力・ガス使用量データ（電力・ガス請求書）','法人の場合は登記事項証明書'],
+    steps:['nagano-enecos.com または長野県産業労働部で対象設備を確認','導入設備を選定・見積取得','申請書類を作成し長野県に提出（9月30日締切）','審査・交付決定','設備更新・導入（2027年1月8日までに完了）','実績報告書・領収書を提出'],
+    note:'障害福祉施設であるはなひらくは専用窓口・受付期間が異なる場合あり。長野県のプレスリリースで最新情報を確認すること。',
+  },
 ];
 
 /* ─── TAG CONFIG ─── */
@@ -740,6 +796,8 @@ function render(){
   document.getElementById('stat-total').textContent = list.length;
   const urg60 = list.filter(g=>{ const d=daysLeft(g.deadline); return d!==null&&d>0&&d<=60; }).length;
   document.getElementById('stat-urgent').textContent = urg60;
+  const ongoing = list.filter(g=>g.deadline===null).length;
+  document.getElementById('stat-ongoing').textContent = ongoing;
 
   const grid = document.getElementById('grid');
   if(!list.length){
